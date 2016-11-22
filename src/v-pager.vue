@@ -27,7 +27,7 @@
 // 2. 分页算法，支持大量分页符，支持单个分页符
 // 3
 const EVENT = {
-  PAGE_CHANGED: 'changed-pager'
+  PAGE_CHANGED: 'change'
 };
 export default {
   props: {

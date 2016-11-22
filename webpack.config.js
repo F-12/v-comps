@@ -12,7 +12,7 @@ if (!DEBUG) {
 
 module.exports = {
     output: {
-        library: 'v-comp',
+        library: 'v-comps',
         libraryTarget: 'umd',
         filename: 'index.js',
         chunkFilename: 'index.js'

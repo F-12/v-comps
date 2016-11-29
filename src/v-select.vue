@@ -25,7 +25,7 @@
 export default {
   props: {
     name: '',
-    selected: null,
+    value: null,
     options: {
       type: Array,
       default: []
@@ -48,7 +48,7 @@ export default {
       return this.filterBy ? this.options.filter(this.filterBy(this.input)) : this.options;
     },
     selectedOption() {
-      return this.options.filter(o => o.value === this.selected)[0];
+      return this.options.filter(o => o.value === this.value)[0];
     }
   },
   methods: {
@@ -68,6 +68,7 @@ export default {
       }
       this.$emit('selected', option);
       this.hide();
+      this.$emit('input', option.value);
     }
   },
   mounted() {

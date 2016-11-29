@@ -1,26 +1,25 @@
 <template>
 <table>
   <colgroup>
-    <col v-for="(h, index) in headItems" :col-index="index"></col>
+    <col v-for="(h, index) in heads" :col-index="index"></col>
   </colgroup>
   <thead>
     <tr>
-      <th v-for="h in headItems" :class="h.classes.concat([h.hidden ? 'hidden' : ''])">
-        <template v-if="h.hcomponent">
-          <component :is="h.hcomponent" :col-index="colIdx" :item="h"></component>
+      <th v-for="h in heads" :class="h.classes.concat([h.hidden ? 'hidden' : ''])">
+        <template v-if="_optionData(h.head)">
+          <component :is="h.head" :col-index="colIdx" :item="h"></component>
         </template>
-        <template v-else v-html="h.text"></template>
+        <template v-if="_stringData(h.head)" v-html="h.head"></template>
       </th>
     </tr>
   </thead>
   <tbody>
-    <tr v-for="(rowIdx, row) in renderedSource">
-      <td v-for="(colIdx, h) in headItems" :class="h.classes.concat([h.hidden ? 'hidden' : ''])">
-        <template v-if="h.component">
-          <component :is="h.component" :item="row" :key="h.key" :col-index="colIdx" :row-index="rowIdx"></component>
+    <tr v-for="(item, rowIdx) in renderedSource">
+      <td v-for="(h, colIdx) in heads" :class="h.classes.concat([h.hidden ? 'hidden' : ''])">
+        <template v-if="_optionData(h.data)">
+          <component :is="h.data" :item="item" :key="item[h.key]" :column="colIdx" :row="rowIdx"></component>
         </template>
-        <template v-else v-html="h.render ? h.render(row): ''">
-        </template>
+        <template v-if="_functionData(h.data)" v-html="h.data(item)"></template>
       </td>
     </tr>
   </tbody>
@@ -33,7 +32,7 @@
 // 实现数据项渲染的组件能获得的所有数据即传递到表格组件内的一行数据，因而实现数据项组件时只能依赖于传递到表格组件的source列表中的对象
 // 存在表格数据项内需要传递事件给使用者，
 // 需求:
-// 1. headItems: {
+// 1. heads: {
 //      component: 指定定义在Vue全局的组件名
 //      text: 表头渲染的文本
 //      key:  该列数据在source行对象中的key, 目前只支持字符串,
@@ -52,7 +51,7 @@
 /*require('floatthead');*/
 export default {
   props: {
-    headItems: {
+    heads: {
       type: Array,
       default: []
     },
@@ -94,10 +93,15 @@ export default {
     };
   },
   methods: {
-  },
-  created() {
-    console.log('v-table created');
-    /*this.headItems.forEach(hi => )*/
+    _stringData(data) {
+      return typeof(data) === 'string';
+    },
+    _functionData(data) {
+      return typef(data) === 'function';
+    },
+    _optionData(data) {
+      return typeof(data) === 'object';
+    }
   }
 };
 </script>
@@ -105,19 +109,16 @@ export default {
 th {
   text-align: center;
 }
-/*th + th {*/
-  /*border-left: 1px dotted rgba(0, 0, 0, 0.075);*/
-/*}*/
 th.hidden, td.hidden {
   display: none;
 }
-.col-left {
+.left {
   text-align: left;
 }
-.col-center {
+.center {
   text-align: center;;
 }
-.col-right {
+.right {
   text-align: right;
 }
 </style>

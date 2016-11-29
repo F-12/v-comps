@@ -37,7 +37,7 @@ export default {
     },
     total: {
       type: Number,
-      default: 0
+      default: 1
     },
     viewSize: { // 决定分页算法计算的显示长度
       type: Number,
@@ -124,6 +124,9 @@ export default {
     'current': function(value, old) {
       if(old !== value) {
         this.$emit(EVENT.PAGE_CHANGED, {total: this.total, current: this.current});
+      }
+      if(value < 1) {
+        this.current = 1;
       }
     },
     'total': function(total) {
